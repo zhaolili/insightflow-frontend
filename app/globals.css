@@ -1,26 +1,169 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Core palette */
+  --bg-base: #0D1117;
+  --bg-card: #161B22;
+  --bg-card-hover: #1C2230;
+  --bg-elevated: #1F2937;
+  --border: #21262D;
+  --border-subtle: #30363D;
+
+  /* Accent colors */
+  --accent: #58A6FF;
+  --accent-dim: rgba(88, 166, 255, 0.15);
+  --accent-glow: rgba(88, 166, 255, 0.3);
+  --success: #3FB950;
+  --danger: #F85149;
+  --warning: #D29922;
+  --neutral: #8B949E;
+
+  /* Text */
+  --text-primary: #E6EDF3;
+  --text-secondary: #8B949E;
+  --text-muted: #484F58;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.4), 0 0 0 1px rgba(48,54,61,0.5);
+  --shadow-glow: 0 0 20px rgba(88, 166, 255, 0.08);
+  --shadow-glow-strong: 0 0 30px rgba(88, 166, 255, 0.2);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg-base);
+  --color-foreground: var(--text-primary);
+  --font-sans: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Source Code Pro', monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neutral);
+}
+
+/* Grid background texture */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(88, 166, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(88, 166, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Card with glow effect */
+.card-glow {
+  box-shadow: var(--shadow-card), var(--shadow-glow);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card-glow:hover {
+  box-shadow: var(--shadow-card), var(--shadow-glow-strong);
+  transform: translateY(-1px);
+}
+
+/* Highlight animation for new feed items */
+@keyframes highlight-in {
+  0%   { box-shadow: 0 0 0 2px #D29922, 0 0 20px rgba(210,153,34,0.3); }
+  100% { box-shadow: var(--shadow-card); }
+}
+.feed-highlight {
+  animation: highlight-in 3s ease-out forwards;
+}
+
+/* Glow pulse for badges */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Scan line effect */
+@keyframes scan-line {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+/* Type cursor blink */
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* AI response streaming dots */
+@keyframes dot-bounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-6px); }
+}
+
+/* Cold light border glow */
+.border-glow {
+  border: 1px solid rgba(88, 166, 255, 0.2);
+  box-shadow: inset 0 0 20px rgba(88, 166, 255, 0.03), 0 0 0 1px rgba(88, 166, 255, 0.1);
+}
+
+/* Section headings with left accent */
+.section-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--neutral);
+}
+
+/* Number display using monospace */
+.num {
+  font-family: 'JetBrains Mono', 'Source Code Pro', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Active nav item */
+.nav-active {
+  background: rgba(88, 166, 255, 0.1);
+  color: var(--accent);
+  border-right: 2px solid var(--accent);
+}
+
+/* Tooltip */
+.tooltip {
+  position: relative;
+}
+.tooltip-content {
+  display: none;
+  position: absolute;
+  z-index: 50;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+.tooltip:hover .tooltip-content {
+  display: block;
 }
