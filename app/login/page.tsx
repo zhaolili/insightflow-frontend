@@ -62,44 +62,77 @@ export default function LoginPage() {
 
         {/* Form card */}
         <div
-          className="rounded-xl p-8 border"
+          className="rounded-2xl p-8 border"
           style={{
-            background: 'rgba(22, 27, 34, 0.85)',
+            background: 'rgba(22, 27, 34, 0.9)',
             backdropFilter: 'blur(20px)',
-            borderColor: 'rgba(88, 166, 255, 0.2)',
-            boxShadow: '0 0 40px rgba(88,166,255,0.08), 0 20px 60px rgba(0,0,0,0.5)',
+            borderColor: 'rgba(88, 166, 255, 0.15)',
+            boxShadow: '0 0 60px rgba(0,0,0,0.5), 0 20px 80px rgba(0,0,0,0.4)',
           }}
         >
-          <h2 className="text-[#E6EDF3] text-base font-semibold mb-6">账号登录</h2>
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6 pb-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
+            <div className="flex items-center gap-2.5">
+              {/* Shield icon */}
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              <h2 className="text-[#E6EDF3] text-base font-semibold tracking-wide">系统访问认证</h2>
+            </div>
+            {/* Safe connection indicator */}
+            <div className="flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full bg-[#00D4AA]" style={{ animation: 'pulse-glow 2s infinite' }} />
+              <span className="text-[11px]" style={{ color: 'rgba(255,255,255,0.6)' }}>安全连接</span>
+            </div>
+          </div>
 
           <form action={formAction} className="space-y-4">
+            {/* Username field */}
             <div>
-              <label className="block text-[#8B949E] text-xs mb-2 tracking-wide">用户名</label>
+              <div className="flex items-center gap-2 mb-2">
+                {/* User icon */}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8B949E" strokeWidth="1.5">
+                  <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <label className="text-[#8B949E] text-xs tracking-wide">用户名</label>
+              </div>
               <input
                 name="username"
                 type="text"
                 autoComplete="username"
                 placeholder="请输入用户名"
-                className="w-full px-4 py-3 rounded-lg text-sm text-[#E6EDF3] placeholder-[#484F58] outline-none transition-all"
+                className="w-full px-4 py-3 rounded-lg text-sm outline-none transition-all"
                 style={{
                   background: 'rgba(13,17,23,0.8)',
                   border: '1px solid #30363D',
+                  color: '#E6EDF3',
                 }}
                 onFocus={e => e.target.style.borderColor = '#58A6FF'}
                 onBlur={e => e.target.style.borderColor = '#30363D'}
               />
             </div>
+
+            {/* Password field */}
             <div>
-              <label className="block text-[#8B949E] text-xs mb-2 tracking-wide">密码</label>
+              <div className="flex items-center gap-2 mb-2">
+                {/* Lock icon */}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8B949E" strokeWidth="1.5">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0110 0v4"/>
+                </svg>
+                <label className="text-[#8B949E] text-xs tracking-wide">密码</label>
+              </div>
               <input
                 name="password"
                 type="password"
                 autoComplete="current-password"
                 placeholder="请输入密码"
-                className="w-full px-4 py-3 rounded-lg text-sm text-[#E6EDF3] placeholder-[#484F58] outline-none transition-all"
+                className="w-full px-4 py-3 rounded-lg text-sm outline-none transition-all"
                 style={{
                   background: 'rgba(13,17,23,0.8)',
                   border: '1px solid #30363D',
+                  color: '#E6EDF3',
                 }}
                 onFocus={e => e.target.style.borderColor = '#58A6FF'}
                 onBlur={e => e.target.style.borderColor = '#30363D'}
@@ -115,15 +148,17 @@ export default function LoginPage() {
               </div>
             )}
 
+            {/* Submit button */}
             <button
               type="submit"
               disabled={isPending}
-              className="w-full py-3 rounded-lg text-sm font-semibold text-white transition-all mt-2 disabled:opacity-60"
+              className="w-full py-3.5 rounded-xl text-sm font-medium transition-all mt-3 disabled:opacity-60 flex items-center justify-center gap-2"
               style={{
                 background: isPending
-                  ? 'rgba(88,166,255,0.5)'
-                  : 'linear-gradient(135deg, #1f6feb 0%, #58A6FF 100%)',
-                boxShadow: '0 0 20px rgba(88,166,255,0.2)',
+                  ? 'rgba(0,100,150,0.5)'
+                  : 'linear-gradient(135deg, #006064 0%, #0D47A1 100%)',
+                color: 'white',
+                border: '1px solid rgba(255,255,255,0.1)',
               }}
             >
               {isPending ? (
@@ -132,15 +167,31 @@ export default function LoginPage() {
                     <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.3"/>
                     <path d="M12 2a10 10 0 0110 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
                   </svg>
-                  登录中...
+                  认证中...
                 </span>
-              ) : '登 录'}
+              ) : (
+                <>
+                  {/* Fingerprint icon */}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M12 2C7.5 2 4 6 4 10c0 2 .5 3.5 1.5 5 1 1.5 2.5 2.5 3.5 3.5.5.5 1 1 1 1.5v2c0 1.5 1 2 2 2s2-.5 2-2v-2c0-.5.5-1 1-1.5 1-1 2.5-2 3.5-3.5 1-1.5 1.5-3 1.5-5 0-4-3.5-8-8-8z"/>
+                    <path d="M12 6v12"/>
+                    <path d="M8 8c0 3 1 5 4 5s4-2 4-5"/>
+                    <path d="M8 14c0 2 1.5 3 4 3s4-1 4-3"/>
+                  </svg>
+                  <span>身份认证</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="9 18 15 12 9 6"/>
+                  </svg>
+                </>
+              )}
             </button>
           </form>
 
-          <div className="mt-6 pt-5 border-t border-[#21262D] flex items-center justify-between text-[10px] text-[#484F58]">
-            <span>Demo 账号：admin</span>
-            <span>Demo 密码：InsightFlow2026</span>
+          {/* Footer */}
+          <div className="mt-6 pt-5 border-t text-center" style={{ borderColor: '#21262D' }}>
+            <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.35)' }}>
+              仅授权用户可访问 · 所有操作将被记录
+            </p>
           </div>
         </div>
 
