@@ -26,22 +26,32 @@ export default function FeedCard({ item, isNew, compact }: FeedCardProps) {
 
   return (
     <div
-      className={`relative rounded-xl px-5 py-4 transition-all duration-200 group ${isNew ? 'feed-highlight' : ''}`}
+      className={`relative rounded-xl px-5 py-4 transition-all duration-300 group overflow-hidden ${isNew ? 'feed-highlight feed-card-enter' : ''}`}
       style={{
         background: 'var(--bg-card)',
         border: '1px solid var(--border)',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
       }}
       onMouseEnter={e => {
         setShowActions(true)
-        e.currentTarget.style.borderColor = 'var(--border-subtle)'
+        e.currentTarget.style.borderColor = domain?.color ? `${domain.color}50` : 'var(--border-subtle)'
         e.currentTarget.style.background = 'var(--bg-card-hover)'
+        e.currentTarget.style.transform = 'translateY(-2px)'
+        e.currentTarget.style.boxShadow = domain?.color ? `0 8px 24px ${domain.color}15` : '0 8px 24px rgba(0,0,0,0.4)'
       }}
       onMouseLeave={e => {
         setShowActions(false)
         e.currentTarget.style.borderColor = 'var(--border)'
         e.currentTarget.style.background = 'var(--bg-card)'
+        e.currentTarget.style.transform = 'translateY(0)'
+        e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)'
       }}
     >
+      {/* Top accent line */}
+      <div
+        className="absolute top-0 left-0 right-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        style={{ background: `linear-gradient(90deg, transparent, ${domain?.color || 'var(--accent)'}, transparent)` }}
+      />
       {/* Top row: domain + time + authority badge */}
       <div className="flex items-center gap-2 mb-2">
         <span className="text-base">{domain?.icon || '📄'}</span>
@@ -77,9 +87,9 @@ export default function FeedCard({ item, isNew, compact }: FeedCardProps) {
 
       {/* Title */}
       <h3
-        className="text-[13px] font-semibold mb-2 leading-snug cursor-pointer transition-colors"
+        className="text-[14px] font-bold mb-2.5 leading-snug cursor-pointer transition-colors"
         style={{ color: 'var(--text-primary)' }}
-        onMouseEnter={e => (e.currentTarget.style.color = '#58A6FF')}
+        onMouseEnter={e => (e.currentTarget.style.color = domain?.color || '#58A6FF')}
         onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-primary)')}
       >
         {item.title}
@@ -88,7 +98,7 @@ export default function FeedCard({ item, isNew, compact }: FeedCardProps) {
       {/* Summary */}
       {!compact && (
         <p
-          className="text-[12px] leading-relaxed mb-3"
+          className="text-[12px] leading-relaxed mb-3.5 opacity-80 group-hover:opacity-100 transition-opacity"
           style={{ color: 'var(--text-secondary)' }}
         >
           {item.summary}
@@ -97,17 +107,18 @@ export default function FeedCard({ item, isNew, compact }: FeedCardProps) {
 
       {/* Tech points */}
       {!compact && item.techPoints.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mb-3">
+        <div className="flex flex-wrap gap-2 mb-4">
           {item.techPoints.map((pt, i) => (
             <span
               key={i}
-              className="text-[10px] px-2 py-0.5 rounded-md"
+              className="flex items-center gap-1 text-[10px] px-2 py-1 rounded-md"
               style={{
-                background: 'rgba(88,166,255,0.08)',
-                border: '1px solid rgba(88,166,255,0.15)',
-                color: '#58A6FF',
+                background: domain?.color ? `${domain.color}10` : 'rgba(88,166,255,0.08)',
+                border: `1px solid ${domain?.color ? `${domain.color}25` : 'rgba(88,166,255,0.15)'}`,
+                color: domain?.color || '#58A6FF',
               }}
             >
+              <span className="w-1 h-1 rounded-full" style={{ background: domain?.color || '#58A6FF' }} />
               {pt}
             </span>
           ))}
@@ -115,39 +126,36 @@ export default function FeedCard({ item, isNew, compact }: FeedCardProps) {
       )}
 
       {/* Tags + source */}
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className="flex items-center gap-2 flex-wrap pt-3 border-t border-[var(--border-subtle)]">
         {item.tags.slice(0, 4).map((tag) => (
           <span
             key={tag}
-            className="text-[10px] px-1.5 py-0.5 rounded"
-            style={{
-              background: 'var(--bg-base)',
-              border: '1px solid var(--border)',
-              color: 'var(--text-muted)',
-            }}
+            className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--bg-base)] border border-[var(--border)] text-[var(--text-muted)]"
           >
-            {tag}
+            #{tag}
           </span>
         ))}
-        <span className="ml-auto text-[11px] flex items-center gap-1" style={{ color: 'var(--text-muted)' }}>
+        <span className="ml-auto text-[11px] flex items-center gap-1.5" style={{ color: 'var(--text-muted)' }}>
           <span
             className="inline-block w-1.5 h-1.5 rounded-full"
-            style={{ background: item.sourceType === 'designated' ? '#58A6FF' : '#8B949E' }}
+            style={{ 
+              background: item.sourceType === 'designated' ? (domain?.color || '#58A6FF') : '#8B949E',
+              boxShadow: item.sourceType === 'designated' ? `0 0 4px ${domain?.color || '#58A6FF'}` : 'none'
+            }}
           />
           {item.source}
         </span>
       </div>
 
       {/* Hover action buttons */}
-      {showActions && (
-        <div
-          className="absolute right-4 top-4 flex items-center gap-1 rounded-lg px-2 py-1.5"
-          style={{
-            background: 'var(--bg-elevated)',
-            border: '1px solid var(--border-subtle)',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-          }}
-        >
+      <div
+        className={`absolute right-4 top-4 flex items-center gap-1 rounded-lg px-2 py-1.5 transition-all duration-300 ${showActions ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}
+        style={{
+          background: 'var(--bg-elevated)',
+          border: '1px solid var(--border-subtle)',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+        }}
+      >
           <button
             onClick={e => { e.preventDefault(); setBookmarked(!bookmarked) }}
             className="p-1.5 rounded-md transition-colors text-[#8B949E] hover:text-[#58A6FF]"
@@ -182,7 +190,6 @@ export default function FeedCard({ item, isNew, compact }: FeedCardProps) {
             </svg>
           </a>
         </div>
-      )}
-    </div>
+      </div>
   )
 }

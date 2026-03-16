@@ -99,10 +99,13 @@ export default function DisplayFeedPage() {
       )}
 
       {/* Feed 流 - 大屏展示 */}
-      <div className="flex-1 overflow-hidden rounded-xl border" style={{ borderColor: 'var(--border)' }}>
-        <div className="h-full overflow-y-auto p-4" style={{ background: 'var(--bg-card)' }}>
+      <div className="flex-1 overflow-hidden rounded-xl border relative" style={{ borderColor: 'var(--border)' }}>
+        {/* 顶部渐隐遮罩 */}
+        <div className="absolute top-0 left-0 right-0 h-16 z-20 pointer-events-none" style={{ background: 'linear-gradient(to bottom, var(--bg-card), transparent)' }} />
+        
+        <div className="h-full overflow-y-auto p-4 feed-scroll-container" style={{ background: 'var(--bg-card)' }}>
           {/* 简洁的过滤器 */}
-          <div className="flex items-center gap-2 mb-4 sticky top-0 z-10 pb-3" style={{ background: 'var(--bg-card)' }}>
+          <div className="flex items-center gap-2 mb-6 sticky top-0 z-30 pb-3">
             <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>领域筛选：</span>
             {DOMAINS.slice(0, 6).map(d => (
               <span
@@ -122,6 +125,9 @@ export default function DisplayFeedPage() {
 
           <FeedList showFilters={false} autoRefresh={true} />
         </div>
+        
+        {/* 底部渐隐遮罩 */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 z-20 pointer-events-none" style={{ background: 'linear-gradient(to top, var(--bg-card), transparent)' }} />
       </div>
 
       {/* 底部滚动提示 */}

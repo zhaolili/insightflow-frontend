@@ -3,7 +3,11 @@
 import { DOMAINS } from '@/mock/domains'
 import DomainCard from './DomainCard'
 
-export default function RadarGrid() {
+interface RadarGridProps {
+  highlightDomainId?: string | null
+}
+
+export default function RadarGrid({ highlightDomainId }: RadarGridProps) {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
@@ -18,7 +22,11 @@ export default function RadarGrid() {
       </div>
       <div className="grid grid-cols-3 gap-3">
         {DOMAINS.map((domain) => (
-          <DomainCard key={domain.id} domain={domain} />
+          <DomainCard
+            key={domain.id}
+            domain={domain}
+            isNew={highlightDomainId === domain.id}
+          />
         ))}
       </div>
     </div>

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { FeedItem, FEED_ITEMS, NEW_ARRIVAL_POOL } from '@/mock/feed'
 import { DOMAINS } from '@/mock/domains'
 import FeedCard from './FeedCard'
+import TimelineItem from './TimelineItem'
 
 interface FeedListProps {
   initialDomainId?: string
@@ -11,6 +12,8 @@ interface FeedListProps {
   maxItems?: number
   showFilters?: boolean
   autoRefresh?: boolean
+  displayMode?: 'list' | 'timeline'
+  onNewItem?: (item: FeedItem) => void
 }
 
 export default function FeedList({
@@ -19,6 +22,8 @@ export default function FeedList({
   maxItems,
   showFilters = true,
   autoRefresh = true,
+  displayMode = 'list',
+  onNewItem,
 }: FeedListProps) {
   const [items, setItems] = useState<(FeedItem & { isNew?: boolean })[]>(() => {
     const sorted = [...FEED_ITEMS].sort(
@@ -31,6 +36,10 @@ export default function FeedList({
   const [newPoolIdx, setNewPoolIdx] = useState(0)
   const [liveEnabled, setLiveEnabled] = useState(autoRefresh)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
+  const onNewItemRef = useRef(onNewItem)
+  const displayModeRef = useRef(displayMode)
+  onNewItemRef.current = onNewItem
+  displayModeRef.current = displayMode
 
   useEffect(() => {
     if (!liveEnabled) return
@@ -44,12 +53,21 @@ export default function FeedList({
       }
       setItems(prev => [newFeedItem, ...prev])
       setNewPoolIdx(i => i + 1)
+      onNewItemRef.current?.(newFeedItem)
+
+      // Auto scroll to top when new item arrives in list mode
+      if (displayModeRef.current === 'list') {
+        const container = document.querySelector('.feed-scroll-container')
+        if (container) {
+          container.scrollTo({ top: 0, behavior: 'smooth' })
+        }
+      }
 
       setTimeout(() => {
         setItems(prev =>
           prev.map(item => item.id === newFeedItem.id ? { ...item, isNew: false } : item)
         )
-      }, 4000)
+      }, 5000)
     }, 6000)
     return () => { if (timerRef.current) clearInterval(timerRef.current) }
   }, [liveEnabled, newPoolIdx])
@@ -58,6 +76,23 @@ export default function FeedList({
     .filter(item => selectedDomain === 'all' || item.domainId === selectedDomain)
     .filter(item => !authorityOnly || item.isAuthority)
     .slice(0, maxItems)
+
+  if (displayMode === 'timeline') {
+    return (
+      <div className="relative">
+        {/* Timeline main line */}
+        <div
+          className="absolute left-[7px] top-0 bottom-0 w-[2px]"
+          style={{ background: 'linear-gradient(to bottom, var(--accent), var(--border), transparent)' }}
+        />
+        <div className="space-y-0">
+          {filtered.map((item) => (
+            <TimelineItem key={item.id} item={item} isNew={item.isNew} />
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -138,7 +173,7 @@ export default function FeedList({
       </div>
 
       {/* Feed items */}
-      <div className="space-y-2">
+      <div className="space-y-3 pb-24">
         {filtered.map((item) => (
           <FeedCard key={item.id} item={item} isNew={item.isNew} compact={compact} />
         ))}
