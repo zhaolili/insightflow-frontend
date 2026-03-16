@@ -10,13 +10,17 @@ import { FeedItem } from '@/mock/feed'
 
 export default function DashboardPage() {
   const totalToday = DOMAINS.reduce((s, d) => s + d.todayCount, 0)
-  const [highlightDomainId, setHighlightDomainId] = useState<string | null>(null)
+  const [highlightEvent, setHighlightEvent] = useState<{ domainId: string; ts: number } | null>(null)
   const [todayExtra, setTodayExtra] = useState(0)
 
   const handleNewItem = useCallback((item: FeedItem) => {
-    setHighlightDomainId(item.domainId)
+    // 先清除再设置，保证即使连续同领域也能触发动画
+    setHighlightEvent(null)
+    requestAnimationFrame(() => {
+      setHighlightEvent({ domainId: item.domainId, ts: Date.now() })
+    })
     setTodayExtra(prev => prev + 1)
-    setTimeout(() => setHighlightDomainId(null), 4000)
+    setTimeout(() => setHighlightEvent(null), 4000)
   }, [])
 
   return (
@@ -72,7 +76,7 @@ export default function DashboardPage() {
       <div className="flex-1 grid grid-cols-[1fr_340px] gap-6 min-h-0">
         {/* Left: Radar Grid */}
         <div className="overflow-y-auto pr-2 custom-scrollbar">
-          <RadarGrid highlightDomainId={highlightDomainId} />
+          <RadarGrid highlightDomainId={highlightEvent?.domainId ?? null} highlightKey={highlightEvent?.ts ?? 0} />
         </div>
 
         {/* Right: Timeline Feed */}

@@ -17,10 +17,13 @@ export default function DomainCard({ domain, isNew }: DomainCardProps) {
         className={`relative p-4 rounded-xl cursor-pointer transition-all duration-300 group overflow-hidden ${isNew ? 'domain-card-highlight' : ''}`}
         style={{
           background: 'var(--bg-card)',
-          border: '1px solid var(--border)',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+          border: `1px solid ${isNew ? `${domain.color}80` : 'var(--border)'}`,
+          boxShadow: isNew
+            ? `0 0 0 1px ${domain.color}40, 0 0 32px ${domain.color}25`
+            : '0 4px 12px rgba(0,0,0,0.2)',
         }}
         onMouseOver={e => {
+          if (isNew) return
           const el = e.currentTarget
           el.style.borderColor = `${domain.color}60`
           el.style.background = 'var(--bg-card-hover)'
@@ -28,6 +31,7 @@ export default function DomainCard({ domain, isNew }: DomainCardProps) {
           el.style.transform = 'translateY(-4px)'
         }}
         onMouseOut={e => {
+          if (isNew) return
           const el = e.currentTarget
           el.style.borderColor = 'var(--border)'
           el.style.background = 'var(--bg-card)'
@@ -45,10 +49,10 @@ export default function DomainCard({ domain, isNew }: DomainCardProps) {
 
         {/* Top accent line */}
         <div
-          className="absolute top-0 left-0 right-0 h-[2px] opacity-40 group-hover:opacity-100 transition-opacity duration-300"
+          className={`absolute top-0 left-0 right-0 h-[2px] transition-opacity duration-300 ${isNew ? 'opacity-100' : 'opacity-40 group-hover:opacity-100'}`}
           style={{ 
             background: `linear-gradient(90deg, transparent, ${domain.color}, transparent)`,
-            boxShadow: `0 0 8px ${domain.color}`
+            boxShadow: `0 0 ${isNew ? '14px' : '8px'} ${domain.color}`
           }}
         />
 
@@ -56,8 +60,11 @@ export default function DomainCard({ domain, isNew }: DomainCardProps) {
         <div className="relative flex items-start justify-between mb-3">
           <div className="flex items-center gap-2.5">
             <div 
-              className="flex items-center justify-center w-7 h-7 rounded-lg transition-colors duration-300"
-              style={{ background: `${domain.color}15`, border: `1px solid ${domain.color}30` }}
+              className={`flex items-center justify-center w-7 h-7 rounded-lg transition-colors duration-300 ${isNew ? 'animate-pulse' : ''}`}
+              style={{ 
+                background: isNew ? 'rgba(210,153,34,0.2)' : `${domain.color}15`, 
+                border: `1px solid ${isNew ? 'rgba(210,153,34,0.5)' : `${domain.color}30`}` 
+              }}
             >
               <span className="text-[14px]">{domain.icon}</span>
             </div>
@@ -98,18 +105,18 @@ export default function DomainCard({ domain, isNew }: DomainCardProps) {
         {/* Recent 3 titles - always visible */}
         <div className="relative mb-3.5 space-y-2">
           {domain.recentTitles.slice(0, 3).map((title, i) => (
-            <div key={i} className="flex items-start gap-2 group/item">
+            <div key={i} className={`flex items-start gap-2 group/item ${isNew && i === 0 ? 'bg-[rgba(210,153,34,0.1)] -mx-2 px-2 py-1 rounded-md' : ''}`}>
               <span
-                className="shrink-0 w-1.5 h-1.5 rounded-full mt-[5px] transition-all duration-300 group-hover/item:scale-150"
+                className={`shrink-0 w-1.5 h-1.5 rounded-full mt-[5px] transition-all duration-300 group-hover/item:scale-150 ${isNew && i === 0 ? 'animate-pulse' : ''}`}
                 style={{ 
-                  background: i === 0 ? domain.color : 'var(--text-muted)',
-                  boxShadow: i === 0 ? `0 0 6px ${domain.color}` : 'none'
+                  background: isNew && i === 0 ? '#D29922' : (i === 0 ? domain.color : 'var(--text-muted)'),
+                  boxShadow: isNew && i === 0 ? '0 0 8px #D29922' : (i === 0 ? `0 0 6px ${domain.color}` : 'none')
                 }}
               />
               <span
-                className="text-[11px] leading-snug overflow-hidden transition-colors duration-200 group-hover/item:text-white"
+                className={`text-[11px] leading-snug overflow-hidden transition-colors duration-200 group-hover/item:text-white ${isNew && i === 0 ? 'font-bold text-[#E6EDF3]' : ''}`}
                 style={{
-                  color: i === 0 ? 'var(--text-primary)' : 'var(--text-secondary)',
+                  color: isNew && i === 0 ? undefined : (i === 0 ? 'var(--text-primary)' : 'var(--text-secondary)'),
                   display: '-webkit-box',
                   WebkitLineClamp: 1,
                   WebkitBoxOrient: 'vertical' as const,

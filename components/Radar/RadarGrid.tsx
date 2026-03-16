@@ -5,9 +5,10 @@ import DomainCard from './DomainCard'
 
 interface RadarGridProps {
   highlightDomainId?: string | null
+  highlightKey?: number
 }
 
-export default function RadarGrid({ highlightDomainId }: RadarGridProps) {
+export default function RadarGrid({ highlightDomainId, highlightKey = 0 }: RadarGridProps) {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
@@ -21,13 +22,18 @@ export default function RadarGrid({ highlightDomainId }: RadarGridProps) {
         </div>
       </div>
       <div className="grid grid-cols-3 gap-3">
-        {DOMAINS.map((domain) => (
-          <DomainCard
-            key={domain.id}
-            domain={domain}
-            isNew={highlightDomainId === domain.id}
-          />
-        ))}
+        {DOMAINS.map((domain) => {
+          const isHighlighted = highlightDomainId === domain.id
+          return (
+            <div key={domain.id} className="relative">
+              <DomainCard
+                key={isHighlighted ? `hl-${highlightKey}` : domain.id}
+                domain={domain}
+                isNew={isHighlighted}
+              />
+            </div>
+          )
+        })}
       </div>
     </div>
   )
