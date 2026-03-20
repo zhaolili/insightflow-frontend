@@ -4,9 +4,10 @@ interface SourcePieProps {
   designated: number
   web: number
   size?: number
+  color?: string
 }
 
-export default function SourcePie({ designated, web, size = 28 }: SourcePieProps) {
+export default function SourcePie({ designated, web, size = 28, color = '#58A6FF' }: SourcePieProps) {
   const total = designated + web
   const ratio = designated / total
   const angle = ratio * 360
@@ -29,11 +30,11 @@ export default function SourcePie({ designated, web, size = 28 }: SourcePieProps
     <div className="flex items-center gap-1.5">
       <svg width={size} height={size}>
         <circle cx={cx} cy={cy} r={r} fill="#30363D"/>
-        <path d={arcPath} fill="#58A6FF" opacity="0.8"/>
+        <path d={arcPath} fill={color} opacity="0.8"/>
       </svg>
       <div className="text-[9px]" style={{ color: 'var(--text-muted)' }}>
         <div className="flex items-center gap-1">
-          <span style={{ color: '#58A6FF' }}>■</span>
+          <span style={{ color }}>■</span>
           <span>{designated}%</span>
         </div>
         <div className="flex items-center gap-1">

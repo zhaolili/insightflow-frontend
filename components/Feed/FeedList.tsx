@@ -82,8 +82,8 @@ export default function FeedList({
       <div className="relative">
         {/* Timeline main line */}
         <div
-          className="absolute left-[7px] top-0 bottom-0 w-[2px]"
-          style={{ background: 'linear-gradient(to bottom, var(--accent), var(--border), transparent)' }}
+          className="absolute left-[7px] top-0 bottom-0 w-[1px]"
+          style={{ background: 'linear-gradient(to bottom, rgba(0, 240, 255, 0.5), rgba(255, 255, 255, 0.1), transparent)' }}
         />
         <div className="space-y-0">
           {filtered.map((item) => (
@@ -104,9 +104,9 @@ export default function FeedList({
               onClick={() => setSelectedDomain('all')}
               className="px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all"
               style={{
-                background: selectedDomain === 'all' ? 'rgba(88,166,255,0.15)' : 'var(--bg-card)',
-                color: selectedDomain === 'all' ? '#58A6FF' : 'var(--text-secondary)',
-                border: `1px solid ${selectedDomain === 'all' ? 'rgba(88,166,255,0.3)' : 'var(--border)'}`,
+                background: selectedDomain === 'all' ? 'rgba(0, 240, 255, 0.1)' : 'transparent',
+                color: selectedDomain === 'all' ? '#00F0FF' : 'rgba(255, 255, 255, 0.5)',
+                border: `1px solid ${selectedDomain === 'all' ? 'rgba(0, 240, 255, 0.3)' : 'rgba(255, 255, 255, 0.1)'}`,
               }}
             >
               全部
@@ -115,11 +115,11 @@ export default function FeedList({
               <button
                 key={d.id}
                 onClick={() => setSelectedDomain(d.id)}
-                className="px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all"
+                className="px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all hover:border-[#00F0FF]/30 hover:text-[#00F0FF]/80"
                 style={{
-                  background: selectedDomain === d.id ? `${d.color}18` : 'var(--bg-card)',
-                  color: selectedDomain === d.id ? d.color : 'var(--text-secondary)',
-                  border: `1px solid ${selectedDomain === d.id ? `${d.color}40` : 'var(--border)'}`,
+                  background: selectedDomain === d.id ? 'rgba(0, 240, 255, 0.1)' : 'transparent',
+                  color: selectedDomain === d.id ? '#00F0FF' : 'rgba(255, 255, 255, 0.5)',
+                  border: `1px solid ${selectedDomain === d.id ? 'rgba(0, 240, 255, 0.3)' : 'rgba(255, 255, 255, 0.1)'}`,
                 }}
               >
                 {d.shortName}
@@ -128,18 +128,22 @@ export default function FeedList({
           </div>
 
           {/* Authority filter */}
-          <label className="flex items-center gap-2 cursor-pointer ml-auto">
+          <label className="flex items-center gap-2 cursor-pointer ml-auto group">
             <div
-              className="relative w-8 h-4 rounded-full transition-colors"
-              style={{ background: authorityOnly ? '#58A6FF' : '#30363D' }}
+              className="relative w-8 h-4 rounded-full transition-colors border border-white/10"
+              style={{ background: authorityOnly ? 'rgba(0, 240, 255, 0.2)' : 'transparent' }}
               onClick={() => setAuthorityOnly(!authorityOnly)}
             >
               <div
-                className="absolute top-0.5 w-3 h-3 rounded-full bg-white transition-transform"
-                style={{ transform: authorityOnly ? 'translateX(18px)' : 'translateX(2px)' }}
+                className="absolute top-[1px] w-3 h-3 rounded-full transition-all"
+                style={{ 
+                  background: authorityOnly ? '#00F0FF' : 'rgba(255, 255, 255, 0.3)',
+                  transform: authorityOnly ? 'translateX(16px)' : 'translateX(2px)',
+                  boxShadow: authorityOnly ? '0 0 8px rgba(0, 240, 255, 0.5)' : 'none'
+                }}
               />
             </div>
-            <span className="text-[11px]" style={{ color: 'var(--text-secondary)' }}>仅权威来源</span>
+            <span className="text-[11px] text-white/50 group-hover:text-white/80 transition-colors">仅权威来源</span>
           </label>
 
           {/* Live toggle */}
@@ -147,15 +151,16 @@ export default function FeedList({
             onClick={() => setLiveEnabled(!liveEnabled)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] transition-all"
             style={{
-              background: liveEnabled ? 'rgba(63,185,80,0.12)' : 'var(--bg-card)',
-              color: liveEnabled ? '#3FB950' : 'var(--text-secondary)',
-              border: `1px solid ${liveEnabled ? 'rgba(63,185,80,0.3)' : 'var(--border)'}`,
+              background: liveEnabled ? 'rgba(0, 240, 255, 0.05)' : 'transparent',
+              color: liveEnabled ? '#00F0FF' : 'rgba(255, 255, 255, 0.4)',
+              border: `1px solid ${liveEnabled ? 'rgba(0, 240, 255, 0.2)' : 'rgba(255, 255, 255, 0.1)'}`,
             }}
           >
             <div
               className="w-1.5 h-1.5 rounded-full"
               style={{
-                background: liveEnabled ? '#3FB950' : '#484F58',
+                background: liveEnabled ? '#00F0FF' : 'rgba(255, 255, 255, 0.2)',
+                boxShadow: liveEnabled ? '0 0 6px #00F0FF' : 'none',
                 animation: liveEnabled ? 'pulse-glow 1.5s infinite' : 'none',
               }}
             />
@@ -165,15 +170,15 @@ export default function FeedList({
       )}
 
       {/* Feed count */}
-      <div className="text-[11px] mb-3" style={{ color: 'var(--text-muted)' }}>
-        显示 <span className="text-[#58A6FF] font-mono font-bold">{filtered.length}</span> 条资讯
+      <div className="text-[11px] mb-4 text-white/40 uppercase tracking-widest font-mono">
+        显示 <span className="text-[#00F0FF] font-bold">{filtered.length}</span> 条资讯
         {selectedDomain !== 'all' && (
           <span> · {DOMAINS.find(d => d.id === selectedDomain)?.name}</span>
         )}
       </div>
 
       {/* Feed items */}
-      <div className="space-y-3 pb-24">
+      <div className="space-y-4 pb-24">
         {filtered.map((item) => (
           <FeedCard key={item.id} item={item} isNew={item.isNew} compact={compact} />
         ))}

@@ -5,9 +5,10 @@ interface SparkLineProps {
   direction: 'up' | 'down' | 'flat'
   width?: number
   height?: number
+  color?: string
 }
 
-export default function SparkLine({ data, direction, width = 80, height = 28 }: SparkLineProps) {
+export default function SparkLine({ data, direction, width = 80, height = 28, color: customColor }: SparkLineProps) {
   const min = Math.min(...data)
   const max = Math.max(...data)
   const range = max - min || 1
@@ -19,7 +20,7 @@ export default function SparkLine({ data, direction, width = 80, height = 28 }: 
     return `${x},${y}`
   })
 
-  const color = direction === 'up' ? '#3FB950' : direction === 'down' ? '#F85149' : '#8B949E'
+  const color = customColor || (direction === 'up' ? '#3FB950' : direction === 'down' ? '#F85149' : '#8B949E')
   const polyline = points.join(' ')
 
   // Fill area under line

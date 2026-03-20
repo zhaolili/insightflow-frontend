@@ -22,31 +22,31 @@ function formatTime(dateStr: string): string {
 
 export default function TimelineItem({ item, isNew }: TimelineItemProps) {
   const domain = DOMAINS.find(d => d.id === item.domainId)
-  const nodeColor = domain?.color || '#58A6FF'
+  const ACCENT_COLOR = '#00F0FF'
 
   return (
     <div
-      className={`relative pl-7 pr-2 py-2.5 transition-all duration-500 ${isNew ? 'timeline-item-new' : ''}`}
+      className={`relative pl-7 pr-2 py-3 transition-all duration-500 group ${isNew ? 'bg-[#00F0FF]/5 rounded-lg' : ''}`}
       style={{
-        animation: isNew ? 'timeline-slide-in 0.5s ease-out' : undefined,
+        animation: isNew ? 'timeline-slide-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)' : undefined,
       }}
     >
       {/* Node */}
       <div
-        className="absolute left-[3px] top-[14px] w-[10px] h-[10px] rounded-full border-2 z-10 transition-all duration-300"
+        className="absolute left-[3px] top-[18px] w-[10px] h-[10px] rounded-full border-[1.5px] z-10 transition-all duration-300"
         style={{
-          borderColor: nodeColor,
-          background: isNew ? nodeColor : 'var(--bg-base)',
-          boxShadow: isNew ? `0 0 8px ${nodeColor}80, 0 0 16px ${nodeColor}40` : 'none',
+          borderColor: isNew ? ACCENT_COLOR : 'rgba(255, 255, 255, 0.3)',
+          background: isNew ? ACCENT_COLOR : '#0A0A0A',
+          boxShadow: isNew ? `0 0 12px ${ACCENT_COLOR}` : 'none',
         }}
       />
 
       {/* Outer ring for authority items */}
       {item.isAuthority && (
         <div
-          className="absolute left-[0px] top-[11px] w-[16px] h-[16px] rounded-full border z-[9]"
+          className="absolute left-[0px] top-[15px] w-[16px] h-[16px] rounded-full border z-[9] transition-colors"
           style={{
-            borderColor: `${nodeColor}50`,
+            borderColor: isNew ? `rgba(0, 240, 255, 0.4)` : 'rgba(255, 255, 255, 0.1)',
             animation: isNew ? 'pulse-glow 1.5s infinite' : undefined,
           }}
         />
@@ -55,33 +55,26 @@ export default function TimelineItem({ item, isNew }: TimelineItemProps) {
       {/* Content */}
       <div className="group">
         {/* Time + domain badge row */}
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-[10px] font-mono shrink-0" style={{ color: 'var(--text-muted)' }}>
+        <div className="flex items-center gap-2 mb-1.5">
+          <span className="text-[10px] font-mono shrink-0 text-white/30 uppercase tracking-widest">
             {formatTime(item.publishedAt)}
           </span>
           <span
-            className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full shrink-0"
-            style={{
-              color: nodeColor,
-              background: `${nodeColor}15`,
-            }}
+            className="text-[9px] font-medium px-1.5 py-0.5 rounded-full shrink-0 border border-white/10 text-white/50"
           >
             {domain?.shortName || item.domainName}
           </span>
           {item.isAuthority && (
             <span
-              className="text-[9px] font-bold px-1 py-0.5 rounded shrink-0"
-              style={{ background: 'rgba(88,166,255,0.12)', color: '#58A6FF' }}
+              className="text-[9px] font-medium px-1.5 py-0.5 rounded shrink-0 border border-[#00F0FF]/30 text-[#00F0FF]"
             >
               权威
             </span>
           )}
           {isNew && (
             <span
-              className="text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0"
+              className="text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0 bg-[#00F0FF]/10 border border-[#00F0FF]/50 text-[#00F0FF]"
               style={{
-                background: 'rgba(210,153,34,0.2)',
-                color: '#D29922',
                 animation: 'pulse-glow 1.5s infinite',
               }}
             >
@@ -92,9 +85,9 @@ export default function TimelineItem({ item, isNew }: TimelineItemProps) {
 
         {/* Title */}
         <div
-          className="text-[12px] leading-snug font-medium overflow-hidden transition-colors"
+          className="text-[13px] leading-relaxed font-medium overflow-hidden transition-colors group-hover:text-white"
           style={{
-            color: isNew ? 'var(--text-primary)' : 'var(--text-secondary)',
+            color: isNew ? '#F3F4F6' : 'rgba(255, 255, 255, 0.6)',
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical' as const,
@@ -104,12 +97,15 @@ export default function TimelineItem({ item, isNew }: TimelineItemProps) {
         </div>
 
         {/* Source */}
-        <div className="flex items-center gap-1.5 mt-1">
+        <div className="flex items-center gap-1.5 mt-2">
           <span
-            className="inline-block w-1 h-1 rounded-full"
-            style={{ background: item.sourceType === 'designated' ? '#58A6FF' : '#484F58' }}
+            className="inline-block w-1.5 h-1.5 rounded-full"
+            style={{ 
+              background: item.sourceType === 'designated' ? ACCENT_COLOR : 'rgba(255, 255, 255, 0.2)',
+              boxShadow: item.sourceType === 'designated' ? `0 0 6px ${ACCENT_COLOR}` : 'none'
+            }}
           />
-          <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
+          <span className="text-[10px] text-white/30 font-mono tracking-wider uppercase">
             {item.source}
           </span>
         </div>

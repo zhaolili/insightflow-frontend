@@ -104,21 +104,21 @@ body {
 /* Highlight animation for new feed items */
 @keyframes highlight-in {
   0% {
-    box-shadow: 0 0 0 2px rgba(210,153,34,0.6), 0 0 24px rgba(210,153,34,0.3);
-    background: rgba(210,153,34,0.08);
+    box-shadow: inset 0 0 30px rgba(0, 240, 255, 0.15), 0 0 24px rgba(0, 240, 255, 0.3);
+    background: rgba(0, 240, 255, 0.05);
   }
   40% {
-    box-shadow: 0 0 0 1px rgba(210,153,34,0.3), 0 0 12px rgba(210,153,34,0.15);
-    background: rgba(210,153,34,0.04);
+    box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.08), 0 0 12px rgba(0, 240, 255, 0.15);
+    background: rgba(0, 240, 255, 0.02);
   }
   100% {
-    box-shadow: var(--shadow-card);
-    background: var(--bg-card);
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.01);
+    background: #0A0A0A;
   }
 }
 .feed-highlight {
   animation: highlight-in 5s ease-out forwards;
-  border-left: 2px solid #D29922 !important;
+  border-left: 2px solid #00F0FF !important;
 }
 
 /* Glow pulse for badges */
@@ -207,7 +207,7 @@ body {
 }
 
 .timeline-item-new {
-  background: rgba(210, 153, 34, 0.06);
+  background: rgba(0, 240, 255, 0.05);
   border-radius: 8px;
 }
 
@@ -245,20 +245,28 @@ body {
 
 @keyframes domain-card-glow {
   0% {
-    transform: scale(1.02) translateY(-4px);
-    background: var(--bg-card-hover);
+    transform: scale(1.01);
+    background: #0A0A0A;
+    border-color: rgba(0, 240, 255, 0.4);
+    box-shadow: inset 0 0 30px rgba(0, 240, 255, 0.1), 0 8px 32px rgba(0, 0, 0, 0.5);
   }
   20% {
-    transform: scale(1.025) translateY(-6px);
-    background: var(--bg-card-hover);
+    transform: scale(1.02);
+    background: #0A0A0A;
+    border-color: rgba(0, 240, 255, 0.6);
+    box-shadow: inset 0 0 40px rgba(0, 240, 255, 0.15), 0 12px 40px rgba(0, 0, 0, 0.6);
   }
   80% {
-    transform: scale(1.01) translateY(-2px);
-    background: var(--bg-card);
+    transform: scale(1.005);
+    background: #0A0A0A;
+    border-color: rgba(0, 240, 255, 0.2);
+    box-shadow: inset 0 0 25px rgba(0, 240, 255, 0.05), 0 4px 20px rgba(0, 0, 0, 0.4);
   }
   100% {
-    transform: scale(1) translateY(0);
-    background: var(--bg-card);
+    transform: scale(1);
+    background: #0A0A0A;
+    border-color: rgba(255, 255, 255, 0.06);
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.01);
   }
 }
 
@@ -271,7 +279,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 0%, rgba(210,153,34,0.15) 0%, transparent 70%);
+  background: radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.1) 0%, transparent 70%);
   animation: pulse-glow 2s infinite;
   pointer-events: none;
 }
@@ -356,6 +364,12 @@ body {
   }
 }
 
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 .border-scan-active::after {
   content: '';
   position: absolute;
@@ -364,7 +378,7 @@ body {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(210, 153, 34, 0.4) 50%,
+    rgba(0, 240, 255, 0.4) 50%,
     transparent 100%
   );
   background-size: 200% 100%;

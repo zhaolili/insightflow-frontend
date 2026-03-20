@@ -11,134 +11,95 @@ interface DomainCardProps {
 }
 
 export default function DomainCard({ domain, isNew }: DomainCardProps) {
+  // 统一的高级科技强调色
+  const ACCENT_COLOR = '#00F0FF' 
+  const ACCENT_MUTED = 'rgba(0, 240, 255, 0.15)'
+
   return (
     <Link href={`/feed?domain=${domain.id}`} className="block">
       <div
-        className={`relative p-4 rounded-xl cursor-pointer transition-all duration-300 group overflow-hidden ${isNew ? 'domain-card-highlight' : ''}`}
+        className={`relative p-5 rounded-xl cursor-pointer group overflow-hidden bg-[#0A0A0A] ${isNew ? 'domain-card-highlight' : ''}`}
         style={{
-          background: 'var(--bg-card)',
-          border: `1px solid ${isNew ? `${domain.color}80` : 'var(--border)'}`,
-          boxShadow: isNew
-            ? `0 0 0 1px ${domain.color}40, 0 0 32px ${domain.color}25`
-            : '0 4px 12px rgba(0,0,0,0.2)',
+          border: '1px solid rgba(255, 255, 255, 0.06)',
+          // 默认状态下极弱的阴影，显得稳重
+          boxShadow: 'inset 0 0 20px rgba(255, 255, 255, 0.01)',
+          transition: 'all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)',
         }}
         onMouseOver={e => {
           if (isNew) return
           const el = e.currentTarget
-          el.style.borderColor = `${domain.color}60`
-          el.style.background = 'var(--bg-card-hover)'
-          el.style.boxShadow = `0 8px 32px ${domain.color}20, 0 4px 12px rgba(0,0,0,0.4)`
-          el.style.transform = 'translateY(-4px)'
+          // Hover 时不再位移，而是增强边框和内发光，体现科技感
+          el.style.border = `1px solid rgba(0, 240, 255, 0.3)`
+          el.style.boxShadow = `inset 0 0 30px ${ACCENT_MUTED}, 0 8px 32px rgba(0, 0, 0, 0.5)`
         }}
         onMouseOut={e => {
           if (isNew) return
           const el = e.currentTarget
-          el.style.borderColor = 'var(--border)'
-          el.style.background = 'var(--bg-card)'
-          el.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)'
-          el.style.transform = 'translateY(0)'
+          el.style.border = '1px solid rgba(255, 255, 255, 0.06)'
+          el.style.boxShadow = 'inset 0 0 20px rgba(255, 255, 255, 0.01)'
         }}
       >
-        {/* Ambient background glow */}
-        <div 
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-          style={{
-            background: `radial-gradient(circle at 50% 0%, ${domain.color}15 0%, transparent 70%)`
-          }}
-        />
+        {/* 高级动效：Hover 时的扫光效果 (Shimmer) */}
+        <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.03)] to-transparent group-hover:animate-[shimmer_1.5s_infinite] pointer-events-none" />
 
-        {/* Top accent line */}
-        <div
-          className={`absolute top-0 left-0 right-0 h-[2px] transition-opacity duration-300 ${isNew ? 'opacity-100' : 'opacity-40 group-hover:opacity-100'}`}
-          style={{ 
-            background: `linear-gradient(90deg, transparent, ${domain.color}, transparent)`,
-            boxShadow: `0 0 ${isNew ? '14px' : '8px'} ${domain.color}`
-          }}
-        />
+        {/* 顶部极简强调线 (替代原来的渐变线) */}
+        <div className={`absolute top-0 left-4 right-4 h-[1px] transition-colors duration-500 ${isNew ? 'bg-gradient-to-r from-transparent via-[#00F0FF] to-transparent' : 'bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.1)] to-transparent group-hover:via-[#00F0FF]'}`} />
 
-        {/* Header row */}
-        <div className="relative flex items-start justify-between mb-3">
-          <div className="flex items-center gap-2.5">
-            <div 
-              className={`flex items-center justify-center w-7 h-7 rounded-lg transition-colors duration-300 ${isNew ? 'animate-pulse' : ''}`}
-              style={{ 
-                background: isNew ? 'rgba(210,153,34,0.2)' : `${domain.color}15`, 
-                border: `1px solid ${isNew ? 'rgba(210,153,34,0.5)' : `${domain.color}30`}` 
-              }}
-            >
-              <span className="text-[14px]">{domain.icon}</span>
+        {/* Header 区域 */}
+        <div className="relative flex items-start justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className={`text-[16px] transition-all duration-300 ${isNew ? 'grayscale-0 opacity-100' : 'opacity-70 grayscale group-hover:grayscale-0 group-hover:opacity-100'}`}>
+              {domain.icon}
             </div>
-            <div className="text-[13px] font-bold text-[#E6EDF3] tracking-wide">{domain.name}</div>
+            <div className="text-[14px] font-medium text-white tracking-wider">
+              {domain.name}
+            </div>
           </div>
-          <div
-            className="flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono font-bold text-white shrink-0 shadow-sm"
-            style={{ 
-              background: 'linear-gradient(135deg, var(--danger), #ff7b72)',
-              boxShadow: '0 2px 8px rgba(248,81,73,0.3)'
-            }}
-          >
-            +{domain.todayCount}
+          
+          {/* 去掉大红大紫的背景，改为极简的数字展示 */}
+          <div className="flex flex-col items-end">
+            <div className="flex items-center gap-1.5">
+              {isNew && (
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00F0FF] animate-pulse shadow-[0_0_8px_#00F0FF]" />
+              )}
+              <span className="text-[18px] font-mono font-light text-[#00F0FF] leading-none">
+                {domain.todayCount}
+              </span>
+            </div>
+            <span className="text-[9px] text-white/30 uppercase tracking-widest mt-1">Today</span>
           </div>
         </div>
 
-        {/* Sparkline + source pie */}
-        <div className="relative flex items-end justify-between mb-3 bg-black/20 rounded-lg p-2 border border-white/5">
-          <SparkLine data={domain.weekTrend} direction={domain.trendDirection} width={80} height={28} />
-          <SourcePie designated={domain.sourceRatio.designated} web={domain.sourceRatio.web} size={28} />
+        {/* 数据图表区：降低饱和度，融入暗黑背景 */}
+        <div className="relative flex items-end justify-between mb-4 p-3 bg-white/[0.02] rounded-lg border border-white/[0.03]">
+          <div className={`transition-opacity duration-300 ${isNew ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}>
+            <SparkLine data={domain.weekTrend} direction={domain.trendDirection} width={80} height={28} color={ACCENT_COLOR} />
+          </div>
+          <div className={`transition-opacity duration-300 ${isNew ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}>
+            <SourcePie designated={domain.sourceRatio.designated} web={domain.sourceRatio.web} size={28} color={ACCENT_COLOR} />
+          </div>
         </div>
 
-        {/* Trend label */}
-        <div className="relative flex items-center gap-2 mb-3">
-          <span
-            className="flex items-center gap-0.5 text-[10px] font-mono font-bold px-1.5 py-0.5 rounded"
-            style={{ 
-              color: domain.trendDirection === 'up' ? '#3FB950' : domain.trendDirection === 'down' ? '#F85149' : '#8B949E',
-              background: domain.trendDirection === 'up' ? 'rgba(63,185,80,0.1)' : domain.trendDirection === 'down' ? 'rgba(248,81,73,0.1)' : 'rgba(139,148,158,0.1)'
-            }}
-          >
-            {domain.trendDirection === 'up' ? '▲' : domain.trendDirection === 'down' ? '▼' : '—'}
-            7天趋势
-          </span>
-          <span className="text-[10px] text-[#8B949E]">今日新增 <strong className="text-[#E6EDF3] font-mono">{domain.todayCount}</strong> 条</span>
-        </div>
-
-        {/* Recent 3 titles - always visible */}
-        <div className="relative mb-3.5 space-y-2">
+        {/* 文章列表：强化排版，弱化圆点 */}
+        <div className="relative mb-4 space-y-2.5">
           {domain.recentTitles.slice(0, 3).map((title, i) => (
-            <div key={i} className={`flex items-start gap-2 group/item ${isNew && i === 0 ? 'bg-[rgba(210,153,34,0.1)] -mx-2 px-2 py-1 rounded-md' : ''}`}>
-              <span
-                className={`shrink-0 w-1.5 h-1.5 rounded-full mt-[5px] transition-all duration-300 group-hover/item:scale-150 ${isNew && i === 0 ? 'animate-pulse' : ''}`}
-                style={{ 
-                  background: isNew && i === 0 ? '#D29922' : (i === 0 ? domain.color : 'var(--text-muted)'),
-                  boxShadow: isNew && i === 0 ? '0 0 8px #D29922' : (i === 0 ? `0 0 6px ${domain.color}` : 'none')
-                }}
-              />
-              <span
-                className={`text-[11px] leading-snug overflow-hidden transition-colors duration-200 group-hover/item:text-white ${isNew && i === 0 ? 'font-bold text-[#E6EDF3]' : ''}`}
-                style={{
-                  color: isNew && i === 0 ? undefined : (i === 0 ? 'var(--text-primary)' : 'var(--text-secondary)'),
-                  display: '-webkit-box',
-                  WebkitLineClamp: 1,
-                  WebkitBoxOrient: 'vertical' as const,
-                }}
-              >
+            <div key={i} className="flex items-start gap-2.5 group/item">
+              <span className={`font-mono text-[10px] mt-[3px] transition-colors ${isNew && i === 0 ? 'text-[#00F0FF]' : 'text-white/20 group-hover/item:text-[#00F0FF]'}`}>
+                0{i + 1}
+              </span>
+              <span className={`text-[12px] leading-relaxed line-clamp-1 transition-colors ${isNew && i === 0 ? 'text-white font-medium' : 'text-white/60 group-hover/item:text-white'}`}>
                 {title}
               </span>
             </div>
           ))}
         </div>
 
-        {/* Keywords */}
-        <div className="relative flex flex-wrap gap-1.5 pt-3 border-t border-white/5">
+        {/* 关键词：改为极简线框风格 */}
+        <div className="relative flex flex-wrap gap-2 pt-3 border-t border-white/[0.04]">
           {domain.keywords.slice(0, 3).map((kw) => (
             <span
               key={kw}
-              className="text-[9px] px-1.5 py-0.5 rounded-sm font-medium tracking-wide"
-              style={{
-                background: `linear-gradient(to right, ${domain.color}15, transparent)`,
-                color: `${domain.color}`,
-                borderLeft: `2px solid ${domain.color}`,
-              }}
+              className="text-[10px] px-2 py-1 rounded border border-white/10 text-white/40 group-hover:border-[#00F0FF]/30 group-hover:text-[#00F0FF]/80 transition-colors"
             >
               {kw}
             </span>
